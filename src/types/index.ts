@@ -38,7 +38,46 @@ export interface MonthlyReport {
   profit: number
 }
 
+export interface UserProfile {
+  displayName: string
+  carModel: string
+  photoUrl?: string
+}
+
+export interface Post {
+  id: string
+  userId: string
+  userName: string
+  userPhoto?: string
+  content: string
+  date: string
+  likes: string[] // IDs dos usuários que curtiram
+  comments: Comment[]
+}
+
+export interface Comment {
+  id: string
+  userId: string
+  userName: string
+  content: string
+  date: string
+}
+
+export interface Partnership {
+  id: string
+  name: string
+  category: 'Mecânico' | 'Seguro' | 'Aluguer' | 'Outro'
+  description: string
+  location: string
+  rating: number
+  reviews: number
+  discount?: string
+}
+
 export interface AppState {
   trips: Trip[]
   expenses: Expense[]
+  profile: UserProfile
+  posts: Post[]
+  partnerships: Partnership[]
 }

@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { Sidebar } from './components/Sidebar'
+import { Sidebar, type Page } from './components/Sidebar'
 import { Header } from './components/Header'
 import { Dashboard } from './components/Dashboard'
 import { TripLogger } from './components/TripLogger'
 import { ExpenseTracker } from './components/ExpenseTracker'
 import { MonthlyReports } from './components/MonthlyReports'
+import { Profile } from './components/Profile'
+import { Leaderboard } from './components/Leaderboard'
+import { CommunityFeed } from './components/CommunityFeed'
+import { AggregatedStats } from './components/AggregatedStats'
+import { Partnerships } from './components/Partnerships'
 import { useAppData } from './hooks/useAppData'
 import { colors } from './styles'
-
-type Page = 'dashboard' | 'trips' | 'expenses' | 'reports'
 
 const GLOBAL_CSS = `
   *, *::before, *::after { box-sizing: border-box; }
@@ -24,7 +27,7 @@ const GLOBAL_CSS = `
   .app-layout { display: flex; min-height: 100vh; }
   .sidebar { transform: translateX(0); }
   .main-content { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-  .page-content { flex: 1; padding: 24px; max-width: 1400px; width: 100%; }
+  .page-content { flex: 1; padding: 24px; max-width: 1400px; width: 100%; margin: 0 auto; }
 
   /* Grids */
   .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -67,7 +70,11 @@ const GLOBAL_CSS = `
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { trips, expenses, addTrip, deleteTrip, addExpense, deleteExpense } = useAppData()
+  const { 
+    profile, trips, expenses, posts, partnerships,
+    updateProfile, addTrip, deleteTrip, addExpense, deleteExpense,
+    addPost, toggleLike, addComment
+  } = useAppData()
 
   return (
     <>
@@ -83,6 +90,7 @@ export default function App() {
           <Header
             currentPage={currentPage}
             onMenuToggle={() => setSidebarOpen(o => !o)}
+            profile={profile}
           />
           <main className="page-content">
             {currentPage === 'dashboard' && (
@@ -96,6 +104,27 @@ export default function App() {
             )}
             {currentPage === 'reports' && (
               <MonthlyReports trips={trips} expenses={expenses} />
+            )}
+            {currentPage === 'profile' && (
+              <Profile profile={profile} onUpdate={updateProfile} />
+            )}
+            {currentPage === 'leaderboard' && (
+              <Leaderboard trips={trips} profile={profile} />
+            )}
+            {currentPage === 'feed' && (
+              <CommunityFeed 
+                posts={posts} 
+                profile={profile} 
+                onAddPost={addPost} 
+                onToggleLike={toggleLike} 
+                onAddComment={addComment} 
+              />
+            )}
+            {currentPage === 'stats' && (
+              <AggregatedStats trips={trips} />
+            )}
+            {currentPage === 'partnerships' && (
+              <Partnerships partnerships={partnerships} />
             )}
           </main>
           <footer style={{

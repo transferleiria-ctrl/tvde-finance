@@ -1,7 +1,7 @@
 import React from 'react'
 import { colors } from '../styles'
 
-type Page = 'dashboard' | 'trips' | 'expenses' | 'reports'
+export type Page = 'dashboard' | 'trips' | 'expenses' | 'reports' | 'profile' | 'leaderboard' | 'feed' | 'stats' | 'partnerships'
 
 interface SidebarProps {
   currentPage: Page
@@ -11,10 +11,15 @@ interface SidebarProps {
 }
 
 const navItems: { id: Page; label: string; icon: string }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: '◈' },
-  { id: 'trips', label: 'Viagens', icon: '🚗' },
-  { id: 'expenses', label: 'Despesas', icon: '💳' },
-  { id: 'reports', label: 'Relatórios', icon: '📊' },
+  { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+  { id: 'trips', label: 'Turnos', icon: '🚗' },
+  { id: 'expenses', label: 'Despesas', icon: '💸' },
+  { id: 'reports', label: 'Relatórios', icon: '📅' },
+  { id: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
+  { id: 'feed', label: 'Comunidade', icon: '💬' },
+  { id: 'stats', label: 'Estatísticas', icon: '📈' },
+  { id: 'partnerships', label: 'Parcerias', icon: '🤝' },
+  { id: 'profile', label: 'O Meu Perfil', icon: '👤' },
 ]
 
 export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose }: SidebarProps) {
@@ -67,7 +72,7 @@ export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose }: Sideba
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '16px 12px' }}>
+        <nav style={{ flex: 1, padding: '16px 12px', overflowY: 'auto' }}>
           <div style={{ fontSize: 11, fontWeight: 600, color: colors.gray500, padding: '0 8px', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Menu
           </div>
@@ -103,8 +108,8 @@ export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose }: Sideba
           borderTop: `1px solid ${colors.gray700}`,
           fontSize: 12, color: colors.gray500,
         }}>
-          <div>v1.0.0 — Dados locais</div>
-          <div style={{ marginTop: 4 }}>© 2025 TVDE Finance</div>
+          <div>v1.1.0 — Dados locais</div>
+          <div style={{ marginTop: 4 }}>© 2026 TVDE Finance</div>
         </div>
       </aside>
     </>
