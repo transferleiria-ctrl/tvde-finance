@@ -52,7 +52,8 @@ export function Profile({ profile, onUpdate }: ProfileProps) {
             )}
           </div>
           <h2 style={{ margin: '0 0 4px', fontSize: 24 }}>{profile.displayName}</h2>
-          <p style={{ margin: 0, color: colors.gray500 }}>{profile.carModel}</p>
+          <p style={{ margin: '0 0 4px', color: colors.gray500 }}>{profile.carModel}</p>
+          <p style={{ margin: 0, color: colors.gray400, fontSize: 14 }}>{profile.email}</p>
         </div>
 
         {!isEditing ? (
@@ -64,6 +65,15 @@ export function Profile({ profile, onUpdate }: ProfileProps) {
           </button>
         ) : (
           <form onSubmit={handleSubmit}>
+            <div style={formGroup}>
+              <label style={label}>Email (Google)</label>
+              <input
+                style={{ ...input, backgroundColor: colors.gray50, cursor: 'not-allowed' }}
+                value={formData.email}
+                readOnly
+                disabled
+              />
+            </div>
             <div style={formGroup}>
               <label style={label}>Nome de Exibição</label>
               <input

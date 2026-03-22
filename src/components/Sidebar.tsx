@@ -8,6 +8,7 @@ interface SidebarProps {
   onNavigate: (page: Page) => void
   mobileOpen: boolean
   onClose: () => void
+  onLogout: () => void
 }
 
 const navItems: { id: Page; label: string; icon: string }[] = [
@@ -22,7 +23,7 @@ const navItems: { id: Page; label: string; icon: string }[] = [
   { id: 'profile', label: 'O Meu Perfil', icon: '👤' },
 ]
 
-export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose }: SidebarProps) {
+export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose, onLogout }: SidebarProps) {
   return (
     <>
       {/* Overlay mobile */}
@@ -106,10 +107,31 @@ export function Sidebar({ currentPage, onNavigate, mobileOpen, onClose }: Sideba
         <div style={{
           padding: '16px 20px',
           borderTop: `1px solid ${colors.gray700}`,
-          fontSize: 12, color: colors.gray500,
         }}>
-          <div>v1.1.0 — Dados locais</div>
-          <div style={{ marginTop: 4 }}>© 2026 TVDE Finance</div>
+          <button
+            onClick={onLogout}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              width: '100%', padding: '11px 12px',
+              borderRadius: 8, border: 'none', cursor: 'pointer',
+              fontSize: 14, fontWeight: 400,
+              fontFamily: 'inherit',
+              background: 'transparent',
+              color: colors.gray400,
+              marginBottom: 12,
+              transition: 'all 0.15s ease',
+              textAlign: 'left',
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = colors.white}
+            onMouseOut={(e) => e.currentTarget.style.color = colors.gray400}
+          >
+            <span style={{ fontSize: 18 }}>🚪</span>
+            Sair da Conta
+          </button>
+          <div style={{ fontSize: 12, color: colors.gray500 }}>
+            <div>v1.1.0 — Dados locais</div>
+            <div style={{ marginTop: 4 }}>© 2026 TVDE Finance</div>
+          </div>
         </div>
       </aside>
     </>

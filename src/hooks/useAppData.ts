@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
+import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth'
+import { auth, googleProvider } from '../firebase'
 import type { Trip, Expense, AppState, UserProfile, Post, Partnership } from '../types'
 
 const STORAGE_KEY = 'tvde_finance_data'
@@ -18,6 +20,7 @@ const defaultState: AppState = {
   trips: [],
   expenses: [],
   profile: {
+    email: '',
     displayName: 'Motorista',
     carModel: 'Tesla Model 3',
     photoUrl: '',
@@ -54,10 +57,54 @@ function saveState(state: AppState): void {
 
 export function useAppData() {
   const [state, setState] = useState<AppState>(loadState)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser)
+      setLoading(false)
+      
+      if (firebaseUser && firebaseUser.email) {
+        setState(prev => {
+          // Se o perfil local estiver vazio ou for o padrão, preenche com dados do Google
+          if (!prev.profile.email || prev.profile.email !== firebaseUser.email) {
+            return {
+              ...prev,
+              profile: {
+                ...prev.profile,
+                email: firebaseUser.email!,
+                displayName: firebaseUser.displayName || prev.profile.displayName,
+                photoUrl: firebaseUser.photoURL || prev.profile.photoUrl,
+              }
+            }
+          }
+          return prev
+        })
+      }
+    })
+    return () => unsubscribe()
+  }, [])
 
   useEffect(() => {
     saveState(state)
   }, [state])
+
+  const loginWithGoogle = useCallback(async () => {
+    try {
+      await signInWithPopup(auth, googleProvider)
+    } catch (error) {
+      console.error("Erro ao fazer login com Google:", error)
+    }
+  }, [])
+
+  const logout = useCallback(async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error)
+    }
+  }, [])
 
   const updateProfile = useCallback((profile: UserProfile) => {
     setState(prev => ({ ...prev, profile }))
@@ -84,7 +131,7 @@ export function useAppData() {
   const addPost = useCallback((content: string) => {
     const newPost: Post = {
       id: crypto.randomUUID(),
-      userId: 'u1', // ID fixo para o usuário local
+      userId: state.profile.email || 'u1',
       userName: state.profile.displayName,
       userPhoto: state.profile.photoUrl,
       content,
@@ -100,14 +147,14 @@ export function useAppData() {
       ...prev,
       posts: prev.posts.map(post => {
         if (post.id !== postId) return post
-        const userId = 'u1'
+        const userId = state.profile.email || 'u1'
         const likes = post.likes.includes(userId)
           ? post.likes.filter(id => id !== userId)
           : [...post.likes, userId]
         return { ...post, likes }
       })
     }))
-  }, [])
+  }, [state.profile.email])
 
   const addComment = useCallback((postId: string, content: string) => {
     setState(prev => ({
@@ -116,7 +163,7 @@ export function useAppData() {
         if (post.id !== postId) return post
         const newComment = {
           id: crypto.randomUUID(),
-          userId: 'u1',
+          userId: prev.profile.email || 'u1',
           userName: prev.profile.displayName,
           content,
           date: new Date().toISOString(),
@@ -124,7 +171,7 @@ export function useAppData() {
         return { ...post, comments: [...post.comments, newComment] }
       })
     }))
-  }, [])
+  }, [state.profile.email])
 
   const clearAll = useCallback(() => {
     setState(defaultState)
@@ -145,5 +192,9 @@ export function useAppData() {
     toggleLike,
     addComment,
     clearAll,
+    user,
+    loading,
+    loginWithGoogle,
+    logout,
   }
 }

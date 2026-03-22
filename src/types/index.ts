@@ -39,6 +39,7 @@ export interface MonthlyReport {
 }
 
 export interface UserProfile {
+  email: string
   displayName: string
   carModel: string
   photoUrl?: string
