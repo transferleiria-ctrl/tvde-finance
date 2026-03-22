@@ -43,6 +43,7 @@ export interface UserProfile {
   displayName: string
   carModel: string
   photoUrl?: string
+    isAdmin?: boolean
 }
 
 export interface Post {
