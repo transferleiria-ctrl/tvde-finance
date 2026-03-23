@@ -4,6 +4,7 @@ import { auth, googleProvider } from '../firebase'
 import type { Trip, Expense, AppState, UserProfile, Post, Partnership } from '../types'
 
 const STORAGE_KEY = 'tvde_finance_data'
+const ADMIN_EMAIL = 'transferleiria@gmail.com'
 
 const MOCK_PARTNERSHIPS: Partnership[] = [
   { id: '1', name: 'Oficina Central TVDE', category: 'Mecânico', description: 'Especialistas em manutenção preventiva para frotas.', location: 'Lisboa', rating: 4.8, reviews: 124, discount: '15% em mão de obra' },
@@ -59,11 +60,14 @@ export function useAppData() {
   const [state, setState] = useState<AppState>(loadState)
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = 61
+      (auth, (firebaseUser) => {
       setUser(firebaseUser)
       setLoading(false)
+            if (firebaseUser.email) setIsAdmin(firebaseUser.email === ADMIN_EMAIL)
       
       if (firebaseUser && firebaseUser.email) {
         setState(prev => {
@@ -75,6 +79,7 @@ export function useAppData() {
                 ...prev.profile,
                 email: firebaseUser.email!,
                 displayName: firebaseUser.displayName || prev.profile.displayName,
+                              isAdmin: firebaseUser.email === ADMIN_EMAIL,
                 photoUrl: firebaseUser.photoURL || prev.profile.photoUrl,
               }
             }
@@ -196,5 +201,6 @@ export function useAppData() {
     loading,
     loginWithGoogle,
     logout,
+          isAdmin,
   }
 }
