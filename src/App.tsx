@@ -22,172 +22,108 @@ button:hover { opacity: 0.88; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #f3f4f6; }
 ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-/* Layout */
 .app-layout { display: flex; min-height: 100vh; }
 .sidebar { transform: translateX(0); }
 .main-content { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
 .page-content { flex: 1; padding: 24px; max-width: 1400px; width: 100%; margin: 0 auto; }
-/* Grids */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .chart-wide { grid-column: span 2; }
 .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-/* Mobile */
-@media (max-width: 1024px) {
-.stats-grid { grid-template-columns: repeat(2, 1fr); }
-.charts-grid { grid-template-columns: repeat(2, 1fr); }
-.chart-wide { grid-column: span 2; }
-.cat-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px) {
-.sidebar { transform: translateX(-100%); position: fixed !important; }
-.sidebar.sidebar-open { transform: translateX(0); }
-.mobile-overlay { display: block !important; }
-.menu-btn { display: flex !important; }
-.main-content { margin-left: 0; }
-.stats-grid { grid-template-columns: repeat(2, 1fr); }
-.stats-grid-3 { grid-template-columns: repeat(2, 1fr); }
-.charts-grid { grid-template-columns: 1fr; }
-.chart-wide { grid-column: span 1; }
-.form-grid { grid-template-columns: 1fr; }
-.cat-grid { grid-template-columns: repeat(2, 1fr); }
-.page-content { padding: 16px; }
-}
-@media (max-width: 480px) {
-.stats-grid { grid-template-columns: 1fr; }
-.stats-grid-3 { grid-template-columns: 1fr; }
-.cat-grid { grid-template-columns: 1fr; }
-}
-`
+@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .charts-grid { grid-template-columns: repeat(2, 1fr); } .chart-wide { grid-column: span 2; } .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .sidebar { transform: translateX(-100%); position: fixed !important; } .sidebar.sidebar-open { transform: translateX(0); } .mobile-overlay { display: block !important; } .menu-btn { display: flex !important; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .stats-grid-3 { grid-template-columns: repeat(2, 1fr); } .charts-grid { grid-template-columns: 1fr; } .chart-wide { grid-column: span 1; } .form-grid { grid-template-columns: 1fr; } .cat-grid { grid-template-columns: repeat(2, 1fr); } .page-content { padding: 16px; } }
+@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } .stats-grid-3 { grid-template-columns: 1fr; } .cat-grid { grid-template-columns: 1fr; } }`
+
 export default function App() {
-const [currentPage, setCurrentPage] = useState<Page>('dashboard')
-const [sidebarOpen, setSidebarOpen] = useState(false)
-const {
-profile, trips, expenses, posts, partnerships,
-updateProfile, addTrip, deleteTrip, addExpense, deleteExpense,
-addPost, toggleLike, addComment,
-user, loading, loginWithGoogle, logout, isAdmin, clearAll
-} = useAppData()if (loading) {
-return (
-<div style={{
-display: 'flex',
-minHeight: '100vh',
-alignItems: 'center',
-justifyContent: 'center',
-background: '#f3f4f6',
-padding: 40,
-borderRadius: 12,
-boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
-maxWidth: 280,
-margin: '0 auto',
-background: 'white',
-padding: 40,
-borderRadius: 12,
-boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
-maxWidth: 280,
-marginBottom: 20
-}}>
-<div style={{ width: 40, height: 40, borderRadius: 8, background: '#1a56db', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-<span style={{ fontSize: 24 }}>🚗</span>
-</div>
-<div>
-<div style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 4 }}>A carregar...</div>
-</div>
-</div>
-)
-}
-if (!user) {
-return (
-<div style={{
-display: 'flex',
-minHeight: '100vh',
-alignItems: 'center',
-justifyContent: 'center',
-background: '#f3f4f6',
-padding: 40,
-borderRadius: 12,
-boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
-maxWidth: 440,
-margin: '0 auto',
-flexDirection: 'column',
-gap: 24,
-textAlign: 'center'
-}}>
-<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-<div style={{ width: 48, height: 48, borderRadius: 12, background: '#1a56db', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-<span style={{ fontSize: 28 }}>🚗</span>
-</div>
-<h1 style={{ fontSize: 28, fontWeight: 'bold', margin: 0, color: '#111827' }}>TVDE Finance</h1>
-</div>
-<p style={{ fontSize: 16, color: '#6b7280', margin: '0 0 24px 0' }}>Gestão financeira profissional para motoristas TVDE em Portugal.</p>
-<button onClick={loginWithGoogle} style={{
-background: 'white',
-border: '1px solid #d1d5db',
-borderRadius: 8,
-padding: '12px 24px',
-fontSize: 14,
-fontWeight: 500,
-color: '#1f2937',
-display: 'flex',
-alignItems: 'center',
-gap: 12,
-cursor: 'pointer',
-transition: 'all 0.2s'
-}} onMouseOver={(e) => e.currentTarget.style.background = '#f9fafb'} onMouseOut={(e) => e.currentTarget.style.background = 'white'}>
-<span style={{ fontSize: 20 }}>🔵</span>
-Entrar com Google
-</button>
-<p style={{ fontSize: 13, color: '#9ca3af', margin: '16px 0 0 0' }}>Ao entrar, você concorda em guardar os seus dados localmente no browser.</p>
-</div>
-)
-}return (
-<>
-<div className="app-layout">
-<Sidebar currentPage={currentPage} onNavigate={setCurrentPage} mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onLogout={logout} />
-<div className="main-content">
-<Header currentPage={currentPage} onMenuToggle={() => setSidebarOpen(o => !o)} profile={profile} />
-<main className="page-content">
-{currentPage === 'dashboard' && (
-<Dashboard trips={trips} expenses={expenses} />
-)}
-{currentPage === 'trips' && (
-<TripLogger trips={trips} onAdd={addTrip} onDelete={deleteTrip} />
-)}
-{currentPage === 'expenses' && (
-<ExpenseTracker expenses={expenses} onAdd={addExpense} onDelete={deleteExpense} />
-)}
-{currentPage === 'reports' && (
-<MonthlyReports trips={trips} expenses={expenses} />
-)}
-{currentPage === 'profile' && (
-<Profile profile={profile} onUpdate={updateProfile} />
-)}
-{currentPage === 'leaderboard' && (
-<Leaderboard trips={trips} profile={profile} />
-)}
-{currentPage === 'feed' && (
-<CommunityFeed posts={posts} profile={profile} onAddPost={addPost} onToggleLike={toggleLike} onAddComment={addComment} />
-)}
-{currentPage === 'stats' && (
-<AggregatedStats trips={trips} />
-)}
-{currentPage === 'partnerships' && (
-<Partnerships partnerships={partnerships} />
-)}
-{currentPage === 'admin' && isAdmin && (
-<AdminPanel
-profile={profile}
-trips={trips}
-expenses={expenses}
-posts={posts}
-onClearAll={clearAll}
-/>
-)}
-</main><footer style={{ padding: '16px 24px', borderTop: `1px solid ${colors.gray200}`, background: colors.white, fontSize: 12, color: colors.gray400, textAlign: 'center', }}>TVDE Finance — Gestão Financeira para Motoristas TVDE em Portugal &nbsp;|&nbsp; Dados guardados localmente no seu browser</footer>
-</div>
-</div>
-</>
-)
+  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const {
+    profile,
+    trips,
+    expenses,
+    posts,
+    partnerships,
+    updateProfile,
+    addTrip,
+    deleteTrip,
+    addExpense,
+    deleteExpense,
+    addPost,
+    toggleLike,
+    addComment,
+    user,
+    loading,
+    loginWithGoogle,
+    logout,
+    isAdmin,
+    clearAll,
+  } = useAppData()
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f3f4f6', color: '#111827' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🚗</div>
+        <div style={{ fontSize: '18px', fontWeight: '600' }}>A carregar...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f3f4f6', color: '#111827' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🚗</div>
+        <div style={{ fontSize: '24px', fontWeight: '600', marginBottom: '8px' }}>TVDE Finance</div>
+        <div style={{ color: '#6b7280', marginBottom: '32px', textAlign: 'center' }}>
+          Gestão financeira profissional para motoristas TVDE em Portugal.
+        </div>
+        <button
+          onClick={loginWithGoogle}
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 24px', border: 'none', borderRadius: '8px', background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.12)', cursor: 'pointer', fontSize: '16px', fontWeight: '500', color: '#111827', marginBottom: '16px' }}
+          onMouseOver={(e) => (e.currentTarget.style.background = '#f9fafb')}
+          onMouseOut={(e) => (e.currentTarget.style.background = 'white')}
+        >
+          🔵 Entrar com Google
+        </button>
+        <div style={{ color: '#9ca3af', fontSize: '14px', textAlign: 'center' }}>
+          Ao entrar, você concorda em guardar os seus dados localmente no browser.
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <style>{GLOBAL_CSS}</style>
+      <div className="app-layout">
+        <Sidebar
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          onLogout={logout}
+          isAdmin={isAdmin}
+        />
+        <div className="main-content">
+          <Header onMenuClick={() => setSidebarOpen(o => !o)} profile={profile} />
+          <div className="page-content">
+            {currentPage === 'dashboard' && <Dashboard user={user} profile={profile} trips={trips} expenses={expenses} />}
+            {currentPage === 'trips' && <TripLogger trips={trips} onAdd={addTrip} onDelete={deleteTrip} />}
+            {currentPage === 'expenses' && <ExpenseTracker expenses={expenses} onAdd={addExpense} onDelete={deleteExpense} />}
+            {currentPage === 'reports' && <MonthlyReports trips={trips} expenses={expenses} />}
+            {currentPage === 'profile' && <Profile user={user} profile={profile} onUpdate={updateProfile} />}
+            {currentPage === 'leaderboard' && <Leaderboard />}
+            {currentPage === 'feed' && <CommunityFeed posts={posts} onAdd={addPost} onLike={toggleLike} onComment={addComment} />}
+            {currentPage === 'stats' && <AggregatedStats />}
+            {currentPage === 'partnerships' && <Partnerships partnerships={partnerships} />}
+            {currentPage === 'admin' && isAdmin && <AdminPanel clearAll={clearAll} />}
+          </div>
+          <div style={{ padding: '24px', textAlign: 'center', color: '#6b7280', fontSize: '14px', borderTop: '1px solid #e5e7eb' }}>
+            TVDE Finance — Gestão Financeira para Motoristas TVDE em Portugal  |  Dados guardados localmente no seu browser
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
