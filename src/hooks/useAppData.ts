@@ -4,8 +4,7 @@ import { auth, googleProvider } from '../firebase'
 import type { Trip, Expense, AppState, UserProfile, Post, Partnership } from '../types'
 
 const STORAGE_KEY = 'tvde_finance_data'
-const ADMIN_EMAIL = 'transferleiria@gmail.com'
-
+const ADMIN_EMAIL = 'carloslucaspt2023@gmail.com'
 const MOCK_PARTNERSHIPS: Partnership[] = [
   { id: '1', name: 'Oficina Central TVDE', category: 'Mecânico', description: 'Especialistas em manutenção preventiva para frotas.', location: 'Lisboa', rating: 4.8, reviews: 124, discount: '15% em mão de obra' },
   { id: '2', name: 'Seguros Pro-Drive', category: 'Seguro', description: 'Seguros específicos para atividade TVDE com as melhores coberturas.', location: 'Porto', rating: 4.5, reviews: 89, discount: '10% na anuidade' },
