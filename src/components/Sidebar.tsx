@@ -1,7 +1,7 @@
 import React from 'react'
 import { colors } from '../styles'
 
-export type Page = 'dashboard' | 'trips' | 'expenses' | 'reports' | 'profile' | 'leaderboard' | 'feed' | 'stats' | 'partnerships'
+export type Page = 'dashboard' | 'trips' | 'expenses' | 'reports' | 'profile' | 'leaderboard' | 'feed' | 'stats' | 'partnerships' | 'admin'
 
 interface SidebarProps {
   currentPage: Page
@@ -20,6 +20,7 @@ const navItems: { id: Page; label: string; icon: string }[] = [
   { id: 'feed', label: 'Comunidade', icon: '💬' },
   { id: 'stats', label: 'Estatísticas', icon: '📈' },
   { id: 'partnerships', label: 'Parcerias', icon: '🤝' },
+        { id: 'admin', label: 'Admin', icon: '🛠️' },
   { id: 'profile', label: 'O Meu Perfil', icon: '👤' },
 ]
 
