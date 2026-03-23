@@ -1,0 +1,47 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Funcao para verificar se e admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'carloslucaspt2023@gmail.com';
+    }
+    
+    // Funcao para verificar se e dono do arquivo
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Valida que e uma imagem
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // Valida tamanho maximo de 5MB
+    function isValidSize() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // Fotos de perfil - usuario so pode subir em sua propria pasta
+    match /profilePhotos/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if isOwner(userId) && isImage() && isValidSize();
+    }
+    
+    // Fotos de comunidade - todos autenticados podem subir
+    match /community/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && isImage() && isValidSize();
+    }
+    
+    // Arquivos do admin - apenas admin
+    match /admin/{fileName} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Bloqueio total para qualquer outra pasta
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
